@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Params>
+    <Param>
+        <Name>Коровы и телки для загрузки</Name>
+        <OldColNames>R.NANIMAL,R.NINV,R.DATE_ROGD,R.KLICHKA,F.ferm,F.im,P.IM,R.DATE_POSTUPLN,V.GM,O.NINV,O.KLICHKA,M.NINV,M.KLICHKA,L.DATE_OTEL,L.LAKTAC,L.DATE_ZAPUSK_IN, R.date_v,V1.IM</OldColNames>
+        <NewColNames>NANIMAL, ID, BDAT, NAME,  PEN, NAME_FERM, CBRD, EDAT, WTS, SID, SREG, DID, DREG, FDAT, LACT, DDAT, XDAT, CAR</NewColNames>
+        <Query>
+            SELECT
+
+            R.NANIMAL,R.NINV,R.DATE_ROGD,R.KLICHKA,F.ferm,F.im,P.IM,R.DATE_POSTUPLN,V.GM,O.NINV,O.KLICHKA,M.NINV,M.KLICHKA,L.DATE_OTEL,L.LAKTAC,L.DATE_ZAPUSK_IN, R.date_v,V1.IM
+
+            FROM REGISTER R left join SPOR P on R.NPOR=P.NPOR
+
+            left join ev_gm V on R.NANIMAL=V.NANIMAL and v.date_event = (Select max(e.date_event) from ev_gm e where e.nanimal = v.nanimal)
+
+            left join REGISTER O ON O.NANIMAL=R.NOTCA
+
+            left join REGISTER M ON M.NANIMAL=R.NMATERI
+
+            left join FTL L ON R.NANIMAL=L.NANIMAL
+
+            left join SPV V1 on R.NPV=V1.NPV
+
+            left join obd C on R.NANIMAL=C.NANIMAL
+
+            left join SFERM F on C.NFERM=F.NFERM
+
+            WHERE R.NHOZ=(Select Val from G_CONST Where NCONST=-1)
+
+            AND
+
+            (R.NPOL=4)
+
+            AND
+
+            (R.NANIMAL>4000000000000 and R.NANIMAL&lt;5000000000000)
+
+            AND
+
+            (R.DATE_V is Null)
+
+            UNION
+
+            SELECT
+
+            R.NANIMAL,R.NINV,R.DATE_ROGD,R.KLICHKA,F.ferm,F.im,P.IM,R.DATE_POSTUPLN,V.GM,O.NINV,O.KLICHKA,M.NINV,M.KLICHKA,L.DATE_OTEL,L.LAKTAC,L.DATE_ZAPUSK_IN, R.date_v,V1.IM
+
+            FROM REGISTER R left join SPOR P on R.NPOR=P.NPOR
+
+            left join ev_gm V on R.NANIMAL=V.NANIMAL and v.date_event = (Select max(e.date_event) from ev_gm e where e.nanimal = v.nanimal)
+
+            left join REGISTER O ON O.NANIMAL=R.NOTCA
+
+            left join REGISTER M ON M.NANIMAL=R.NMATERI
+
+            left join FTL L ON R.NANIMAL=L.NANIMAL
+
+            left join SPV V1 on R.NPV=V1.NPV
+
+            left join obd C on R.NANIMAL=C.NANIMAL
+
+            left join SFERM F on C.NFERM=F.NFERM
+
+            WHERE R.NHOZ=(Select Val from G_CONST Where NCONST=-1)
+
+            AND
+
+            (R.NPOL=2)
+
+            AND
+
+            (R.NANIMAL>2000000000000 and R.NANIMAL&lt;3000000000000)
+
+            AND
+
+            (R.DATE_V is Null)
+
+            ;
+        </Query>
+    </Param>
+    <Param>
+        <Name>Осеменения коров и телок</Name>
+        <OldColNames> R.NANIMAL,R.NINV,B.DATE_EVENT,{{5}},O.NINV,T.texn,T.IM</OldColNames>
+        <NewColNames>NANIMAL, ID, EDAY, EC, LSIR, TECH, NAME_TEXN</NewColNames>
+        <Query>SELECT
+
+            R.NANIMAL,R.NINV,B.DATE_EVENT,{{5}},O.NINV,T.texn,T.IM
+
+            FROM REGISTER R right join ev_OSEM B on R.NANIMAL=B.NANIMAL
+
+            left join REGISTER O ON O.NANIMAL=B.nbyk
+
+            left join texn T on B.NTEXN=T.ntexn
+
+            ORDER BY B.DATE_EVENT
+
+            ;</Query>
+    </Param>
+    <Param>
+        <Name>Ректальная диагностика</Name>
+        <OldColNames>R.NANIMAL,R.NINV,S.DATE_EVENT,S.kod,O.IM</OldColNames>
+        <NewColNames>NANIMAL, ID, EDAY, EC, NAME</NewColNames>
+        <Query>SELECT
+
+            R.NANIMAL,R.NINV,S.DATE_EVENT,S.kod,O.IM
+
+            FROM REGISTER R right join ev_steln S on R.NANIMAL=S.NANIMAL
+
+            left join ssteln O ON S.KOD=O.NSTELN
+
+            ORDER BY S.DATE_EVENT
+
+            ;</Query>
+    </Param>
+    <Param>
+        <Name>Аборты коровы и телки</Name>
+        <OldColNames>R.NANIMAL,R.NINV,A.DATE_EVENT,{{12}}</OldColNames>
+        <NewColNames>NANIMAL, ID, EDAY, EC</NewColNames>
+        <Query>SELECT
+
+            R.NANIMAL,R.NINV,A.DATE_EVENT,{{12}}
+
+            FROM REGISTER R right join ev_abort A on R.NANIMAL=A.NANIMAL
+
+            ORDER BY A.DATE_EVENT
+
+            ;</Query>
+    </Param>
+    <Param>
+        <Name>Контрольные дойки коровы и телки живые с 01.01.2015 г.</Name>
+        <OldColNames>R.NANIMAL,B.DATE_EVENT,R.ninv,B.U_SUTKI,B.gir,B.belok</OldColNames>
+        <NewColNames>NANIMAL, EDAY, ID, MILK, PCTF, PCTP</NewColNames>
+        <Query>SELECT
+
+            R.NANIMAL,B.DATE_EVENT,R.ninv,B.U_SUTKI,B.gir,B.belok
+
+            FROM REGISTER R right join ev_kontrol B on R.NANIMAL=B.NANIMAL
+
+            WHERE R.NHOZ=(Select Val from G_CONST Where NCONST=-1)
+
+            AND
+
+            (B.DATE_EVENT>='01.01.2015')
+
+            ORDER BY B.date_event
+
+            ;</Query>
+    </Param>
+    <Param>
+        <Name>Выбытие коровы и телки</Name>
+        <OldColNames>R.NANIMAL,R.NINV,R.DATE_ROGD,R.KLICHKA,P.IM,R.DATE_POSTUPLN,V.GM,O.NINV,O.KLICHKA,M.NINV,M.KLICHKA,L.DATE_OTEL,L.LAKTAC,L.DATE_ZAPUSK_IN, R.date_v,V1.IM</OldColNames>
+        <NewColNames>NANIMAL, ID, BDAT, NAME, CBRD, EDAT, WTS, SID, SREG, DID, DREG, FDAT, LACT, DDAT, XDAT, CAR</NewColNames>
+        <Query>SELECT
+
+            R.NANIMAL,R.NINV,R.DATE_ROGD,R.KLICHKA,P.IM,R.DATE_POSTUPLN,V.GM,O.NINV,O.KLICHKA,M.NINV,M.KLICHKA,L.DATE_OTEL,L.LAKTAC,L.DATE_ZAPUSK_IN, R.date_v,V1.IM
+
+            FROM REGISTER R left join SPOR P on R.NPOR=P.NPOR
+
+            left join ev_gm V on R.NANIMAL=V.NANIMAL and v.date_event = (Select max(e.date_event) from ev_gm e where e.nanimal = v.nanimal)
+
+            left join REGISTER O ON O.NANIMAL=R.NOTCA
+
+            left join REGISTER M ON M.NANIMAL=R.NMATERI
+
+            left join FTL L ON R.NANIMAL=L.NANIMAL
+
+            left join SPV V1 on R.NPV=V1.NPV
+
+            WHERE R.NHOZ=(Select Val from G_CONST Where NCONST=-1)
+
+            AND
+
+            (R.NPOL=2)
+
+            AND
+
+            (R.NANIMAL>2000000000000 and R.NANIMAL&lt;3000000000000)
+
+            AND
+
+            (R.DATE_V is not Null)
+
+            union
+
+            SELECT
+
+            R.NANIMAL,R.NINV,R.DATE_ROGD,R.KLICHKA,P.IM,R.DATE_POSTUPLN,V.GM,O.NINV,O.KLICHKA,M.NINV,M.KLICHKA,L.DATE_OTEL,L.LAKTAC,L.DATE_ZAPUSK_IN, R.date_v,V1.IM
+
+            FROM REGISTER R left join SPOR P on R.NPOR=P.NPOR
+
+            left join ev_gm V on R.NANIMAL=V.NANIMAL and v.date_event = (Select max(e.date_event) from ev_gm e where e.nanimal = v.nanimal)
+
+            left join REGISTER O ON O.NANIMAL=R.NOTCA
+
+            left join REGISTER M ON M.NANIMAL=R.NMATERI
+
+            left join FTL L ON R.NANIMAL=L.NANIMAL
+
+            left join SPV V1 on R.NPV=V1.NPV
+
+            WHERE R.NHOZ=(Select Val from G_CONST Where NCONST=-1)
+
+            AND
+
+            (R.NPOL=4)
+
+            AND
+
+            (R.NANIMAL>4000000000000 and R.NANIMAL&lt;5000000000000)
+
+            AND
+
+            (R.DATE_V is not Null)
+
+            union
+
+            SELECT
+
+            R.NANIMAL,R.NINV,R.DATE_ROGD,R.KLICHKA,P.IM,R.DATE_POSTUPLN,V.GM,O.NINV,O.KLICHKA,M.NINV,M.KLICHKA,L.DATE_OTEL,L.LAKTAC,L.DATE_ZAPUSK_IN, R.date_v,V1.IM
+
+            FROM REGISTER R left join SPOR P on R.NPOR=P.NPOR
+
+            left join ev_gm V on R.NANIMAL=V.NANIMAL and v.date_event = (Select max(e.date_event) from ev_gm e where e.nanimal = v.nanimal)
+
+            left join REGISTER O ON O.NANIMAL=R.NOTCA
+
+            left join REGISTER M ON M.NANIMAL=R.NMATERI
+
+            left join FTL L ON R.NANIMAL=L.NANIMAL
+
+            left join SPV V1 on R.NPV=V1.NPV
+
+            WHERE R.NHOZ=(Select Val from G_CONST Where NCONST=-1)
+
+            AND
+
+            (R.NPOL=2)
+
+            AND
+
+            (R.NANIMAL>8000000000000 and R.NANIMAL&lt;9000000000000)
+
+            AND
+
+            (R.DATE_V is not Null)
+
+            union
+
+            SELECT
+
+            R.NANIMAL,R.NINV,R.DATE_ROGD,R.KLICHKA,P.IM,R.DATE_POSTUPLN,V.GM,O.NINV,O.KLICHKA,M.NINV,M.KLICHKA,L.DATE_OTEL,L.LAKTAC,L.DATE_ZAPUSK_IN, R.date_v,V1.IM
+
+            FROM REGISTER R left join SPOR P on R.NPOR=P.NPOR
+
+            left join ev_gm V on R.NANIMAL=V.NANIMAL and v.date_event = (Select max(e.date_event) from ev_gm e where e.nanimal = v.nanimal)
+
+            left join REGISTER O ON O.NANIMAL=R.NOTCA
+
+            left join REGISTER M ON M.NANIMAL=R.NMATERI
+
+            left join FTL L ON R.NANIMAL=L.NANIMAL
+
+            left join SPV V1 on R.NPV=V1.NPV
+
+            WHERE R.NHOZ=(Select Val from G_CONST Where NCONST=-1)
+
+            AND
+
+            (R.NPOL=4)
+
+            AND
+
+            (R.NANIMAL>8000000000000 and R.NANIMAL&lt;9000000000000)
+
+            AND
+
+            (R.DATE_V is not Null)
+
+            ;
+        </Query>
+    </Param>
+    <Param>
+        <Name>Перевески Коров</Name>
+        <OldColNames>R.NINV,{{R.NANIMAL+10000000000000}},V.GM,{{41}},V.date_event</OldColNames>
+        <NewColNames>REG1, REG2, WTS, EC, EDAY</NewColNames>
+        <Query>SELECT
+
+            R.NINV,{{R.NANIMAL+10000000000000}},V.GM,{{41}},V.date_event
+
+            FROM REGISTER R left join ev_gm V on R.NANIMAL=V.NANIMAL and v.date_event = (Select max(e.date_event) from ev_gm e where e.nanimal = v.nanimal)
+
+            WHERE R.NHOZ=(Select Val from G_CONST Where NCONST=-1)
+
+            AND
+
+            (R.NPOL=4)
+
+            AND
+
+            (R.NANIMAL>4000000000000 and R.NANIMAL&lt;5000000000000)
+
+            AND
+
+            (R.DATE_V is Null)
+
+            UNION
+
+            SELECT
+
+            R.NINV,R.NANIMAL+10000000000000,V.GM,41,V.date_event
+
+            FROM REGISTER R left join ev_gm V on R.NANIMAL=V.NANIMAL and v.date_event = (Select max(e.date_event) from ev_gm e where e.nanimal = v.nanimal)
+
+            WHERE R.NHOZ=(Select Val from G_CONST Where NCONST=-1)
+
+            AND
+
+            (R.NPOL=2)
+
+            AND
+
+            (R.NANIMAL>2000000000000 and R.NANIMAL&lt;3000000000000)
+
+            AND
+
+            (R.DATE_V is Null)
+
+            ;</Query>
+    </Param>
+</Params>
