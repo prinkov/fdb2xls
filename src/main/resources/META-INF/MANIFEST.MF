@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: xyz.prinkov.selex.GUI
+Main-Class: xyz.prinkov.selex.Main
 

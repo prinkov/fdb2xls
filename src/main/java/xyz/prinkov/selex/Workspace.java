@@ -62,8 +62,7 @@ public class Workspace {
 
 //                  pre-compile escaping
 //                  todo удалить пробелы из OldColNames
-                    String withAlias = query.substring(query.indexOf("SELECT") + 6, query.indexOf("FROM"));
-                    String withoutAlias = withAlias.substring(0, withAlias.length());
+                    String withAlias = query.substring(query.indexOf("SELECT") + 6, query.indexOf("FROM"));String withoutAlias = withAlias.substring(0, withAlias.length());
 
                     for (int p = 0; p < vals.length; p++) {
                         if(vals[p].indexOf("{{") != -1) {
@@ -78,9 +77,9 @@ public class Workspace {
                             withoutAlias = withoutAlias.replace(vals[j], vals[j] + " as " + vals[j].replaceAll("\\.", "unique"));
 
                             vals[j] = vals[j].replaceAll("\\.", "unique");
-                            view.put(keys[j].replace(" ", ""), vals[j].replace(" ", ""));
+                            view.put(keys[j].replaceAll(" ", ""), vals[j].replaceAll(" ", ""));
                         } else {
-                            view.put(keys[j].replace(" ", ""), vals[j].replace(" ", ""));
+                            view.put(keys[j].replaceAll(" ", ""), vals[j].replaceAll(" ", ""));
                         }
                     }
                     query = query.replace(withAlias, withoutAlias);

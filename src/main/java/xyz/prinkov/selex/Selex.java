@@ -36,7 +36,6 @@ public class Selex {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
-//            todo отловить ошибки аутентификации
             try {
                 Desktop.getDesktop().browse(new URI("http://www.firebirdsql.org/en/firebird-2-5/"));
             } catch (IOException e1) {
@@ -44,7 +43,9 @@ public class Selex {
             } catch (URISyntaxException e1) {
                 e1.printStackTrace();
             }
-            JOptionPane.showMessageDialog(null,  "Для работы необходимо установить Firebird по ссылке http://www.firebirdsql.org/en/firebird-2-5/", "Ошибка!", JOptionPane.ERROR_MESSAGE);
+
+            JOptionPane.showMessageDialog(null,  "Для работы необходимо установить Firebird по ссылке http://www.firebirdsql.org/en/firebird-2-5/\n" +
+                    "Либо проверьте настройки подключения к БД", "Ошибка!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
