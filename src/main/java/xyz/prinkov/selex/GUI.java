@@ -144,7 +144,7 @@ public class GUI extends JFrame{
 
         this.add(tpane);
         this.setSize(300, 120);
-        this.setResizable(false);
+        this.setResizable(true);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
