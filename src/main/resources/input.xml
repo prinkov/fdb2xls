@@ -281,33 +281,11 @@
     </Param>
     <Param>
         <Name>Перевески Коров</Name>
-        <OldColNames>R.NINV,{{R.NANIMAL+10000000000000}},V.GM,{{41}},V.date_event</OldColNames>
+        <OldColNames>R.NINV,R.NANIMAL,V.GM,{{41}},V.date_event</OldColNames>
         <NewColNames>REG1, REG2, WTS, EC, EDAY</NewColNames>
         <Query>SELECT
 
-            R.NINV,{{R.NANIMAL+10000000000000}},V.GM,{{41}},V.date_event
-
-            FROM REGISTER R left join ev_gm V on R.NANIMAL=V.NANIMAL and v.date_event = (Select max(e.date_event) from ev_gm e where e.nanimal = v.nanimal)
-
-            WHERE R.NHOZ=(Select Val from G_CONST Where NCONST=-1)
-
-            AND
-
-            (R.NPOL=4)
-
-            AND
-
-            (R.NANIMAL>4000000000000 and R.NANIMAL&lt;5000000000000)
-
-            AND
-
-            (R.DATE_V is Null)
-
-            UNION
-
-            SELECT
-
-            R.NINV,R.NANIMAL+10000000000000,V.GM,41,V.date_event
+            R.NINV,R.NANIMAL,V.GM,{{41}},V.date_event
 
             FROM REGISTER R left join ev_gm V on R.NANIMAL=V.NANIMAL and v.date_event = (Select max(e.date_event) from ev_gm e where e.nanimal = v.nanimal)
 
