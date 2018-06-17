@@ -4,7 +4,7 @@ Program for uploading data from the FDB to excel.
 
 ![Screen #1](http://prinkov.xyz/img/fdb2xls_1.png) ![Screen #2](http://prinkov.xyz/img/fdb2xls_2.png)
 
-Get the code: git clone git@github.com:prinkov/fdb2xls.git
+Get the code: git clone https://github.com/prinkov/fdb2xls.git
 
 ## Instructions for use
 1. On form one, select the path to the database and save the excel file
